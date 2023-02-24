@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { ReactComponent as Arrow } from "../../assets/img/arrow.svg";
 import MobileBg from "../../assets/img/pattern-bg-mobile.png";
@@ -13,10 +13,11 @@ const Wrapper = styled.div`
     color: white;
     text-align: center;
     font-size: 26px;
+    font-weight: 500;
   }
 `;
 
-const InputWrapper = styled.div`
+const StyledForm = styled.form`
   padding: 24px;
   display: flex;
   button {
@@ -37,19 +38,26 @@ const StyledInput = styled.input`
   font-size: 16px;
 `;
 
-const SearchBar = () => {
+const SearchBar = ({ userInput, setUserInput }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setUserInput(e.target[0].value);
+  };
+  const inputRef = useRef(null);
   return (
     <Wrapper>
       <h1>IP Address Tracker</h1>
-      <InputWrapper>
+      <StyledForm onSubmit={handleSubmit}>
         <StyledInput
           text="search"
-          placeholder="Search for any IP address or domain"
+          placeholder="Search for any IP address "
+          required
+          ref={inputRef}
         />
         <button>
           <Arrow />
         </button>
-      </InputWrapper>
+      </StyledForm>
     </Wrapper>
   );
 };
