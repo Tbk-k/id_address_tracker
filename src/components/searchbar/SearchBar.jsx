@@ -1,62 +1,51 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
 import { ReactComponent as Arrow } from "../../assets/img/arrow.svg";
-import MobileBg from "../../assets/img/pattern-bg-mobile.png";
+import React, { useCallback, useEffect, useState } from "react";
+import { Wrapper, StyledForm, StyledInput } from "./SearchBar.styles.js";
+import ErrMessage from "../errMessage/ErrMessage";
 
-const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 300px;
-  padding-top: 26px;
-  background: center/cover url(${MobileBg});
-  h1 {
-    margin: 0;
-    color: white;
-    text-align: center;
-    font-size: 26px;
-    font-weight: 500;
-  }
-`;
+const SearchBar = ({ setUserInput }) => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      const input = e.target[0].value;
+      const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+      if (ipRegex.test(input)) {
+        setUserInput(input);
+        setErrorMessage(null);
+      } else {
+        setErrorMessage("Please enter a valid IP address");
+      }
+    },
+    [setUserInput]
+  );
 
-const StyledForm = styled.form`
-  padding: 24px;
-  display: flex;
-  button {
-    width: 58px;
-    border: none;
-    border-radius: 0 15px 15px 0;
-    cursor: pointer;
-    background-color: black;
-  }
-`;
+  useEffect(() => {
+    const inputRef = document.getElementById("search-input");
+    inputRef.focus();
+  }, []);
 
-const StyledInput = styled.input`
-  width: 100%;
-  padding: 18px 24px;
-  border-radius: 15px 0 0 15px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-`;
-
-const SearchBar = ({ userInput, setUserInput }) => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setUserInput(e.target[0].value);
+  const handleChange = () => {
+    errorMessage && setErrorMessage(null);
   };
-  const inputRef = useRef(null);
+
+  const ipRegex = "/^(?:[0-9]{1,3}.){3}[0-9]{1,3}$/";
   return (
     <Wrapper>
       <h1>IP Address Tracker</h1>
       <StyledForm onSubmit={handleSubmit}>
         <StyledInput
+          id="search-input"
           text="search"
           placeholder="Search for any IP address "
           required
-          ref={inputRef}
+          errorMessage={errorMessage}
+          onChange={handleChange}
         />
         <button>
           <Arrow />
         </button>
+        {errorMessage && <ErrMessage text={errorMessage} />}
       </StyledForm>
     </Wrapper>
   );

@@ -1,13 +1,14 @@
 import React from "react";
-import IPDetails from "../ipDetails/IPDetails";
+import LocationDetails from "../locationDetails/LocationDetails";
 import Map from "../map/Map";
 import { Wrapper } from "./Details.styles";
 
 const Details = ({ visitorLocation }) => {
+  let { lat, lng, ...otherProps } = visitorLocation;
   return (
     <Wrapper>
-      <IPDetails visitorLocation={visitorLocation} />
-      <Map lat={visitorLocation.lat} lng={visitorLocation.lng} />
+      <LocationDetails {...otherProps} />
+      <Map lat={lat} lng={lng} />
     </Wrapper>
   );
 };
